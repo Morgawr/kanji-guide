@@ -2,7 +2,9 @@ var outb = document.getElementById('output');
 
 const options = {
   threshold: 0,
-  keys: ["kun"]
+  ignoreLocation: true,
+  findAllMatches: true,
+  keys: ["kun", "kanji"]
 }
 
 async function fetchData(){
@@ -22,7 +24,6 @@ document.getElementById('textbox').addEventListener('input', function(){
   let results = fuse.search(v);
 
   let output = "";
-  console.log(results);
   results.forEach(function(result, index) {
     output += "<li><b>" + result.item["kun"] + "</b> → " + result.item["kanji"] + "</li>";
   })
