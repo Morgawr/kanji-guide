@@ -4,7 +4,7 @@ const options = {
   threshold: 0,
   ignoreLocation: true,
   findAllMatches: true,
-  keys: ["kun", "kanji"]
+  keys: ["kun_no_okurigana", "kanji", "kanji_ext"]
 }
 
 async function fetchData(){
@@ -25,7 +25,10 @@ document.getElementById('textbox').addEventListener('input', function(){
 
   let output = "";
   results.forEach(function(result, index) {
-    output += "<li><b>" + result.item["kun"] + "</b> → " + result.item["kanji"] + "</li>";
+    output += "<li><b>" + result.item["kun"] + "</b> → " + result.item["kanji_oku"];
+    if (result.item["kanji_ext_oku"].length > 0)
+      output += " (外) " + result.item["kanji_ext_oku"];
+    output += "</li>";
   })
   outb.innerHTML = output;
 });
