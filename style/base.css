@@ -1,0 +1,18 @@
+body {
+  background: #2C3639;
+  color: #A27B5C;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.main {
+  width: 60%;
+  margin: auto;
+  text-align: center;
+  padding-top: 10px;
+}
+h1 {
+  color: #DCD7C9;
+}
+a {
+  color: #A27B5C;
+  font-weight: bold;
+}
