@@ -1,11 +1,12 @@
-from Node import Node
+from graph.Node import Node
+from kanji.Word import Word
+
 
 class KanaNode(Node):
 
     def UniqueID(self) -> str:
-        #TODO(morg): Implement the kana data layer
-        return "Placeholder" + str(self.value)
+        return ','.join(self.value.GetAllRepresentations())
 
-    def __init__(self, value: int):
+    def __init__(self, value: Word):
         super().__init__()
         self.value = value

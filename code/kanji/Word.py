@@ -66,3 +66,9 @@ class Word:
                 words.append(self._BuildCoveredWord(segment))
         return words
 
+    def GetAllKanji(self) -> List[str]:
+        """Returns a list of all the kanji used all representations."""
+        kanji = []
+        for segment in self.segments:
+            kanji.extend([x.kanji for x in segment])
+        return kanji
