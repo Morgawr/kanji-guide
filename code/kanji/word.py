@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 
 @dataclass
@@ -36,6 +36,24 @@ class Word:
         self.default_representation = None
         if default_representation:
             self.default_representation = default_representation
+
+    @staticmethod
+    def from_json(data: Dict[Any]) -> Word:
+        """Loads the word from the given json data.
+
+        Args:
+            data: json data in the form of a dict
+
+        Returns:
+            A newly built Word object
+        """
+        word = Word(data["word"])
+        for segment in data["segments"]:
+            # We have many segments, each segment has multiple fragments, so
+            # we need to extract them first, and convert them into a proper
+            # tuple, because json doens't do tuples.
+            word.add_segment(*map(tuple, segment))
+        return word
 
     def add_segment(self, *fragments: Tuple(str, int, int)) -> None:
         """Adds a new segment to the word segment list.
@@ -108,9 +126,24 @@ class WordGroup:
     決める and 決まる, 開く and 開ける, etc.
     """
 
-    # TODO(morg): load from a file
     def __init__(self):
         self.words: List[Word] = list()
+
+    @staticmethod
+    def from_json(data: List[Dict[Any]]) -> WordGroup:
+        """Loads the word group from the given json data list of words.
+
+        Args:
+            data: json data in the form of a list (of words).
+
+        Returns:
+            A newly built WordGroup object.
+        """
+        word_group = WordGroup()
+        for entry in data:
+            word = Word.from_json(entry)
+            word_group.words.append(word)
+        return word_group
 
     def add_word(self, word: Word):
         """Adds word to the existing list of words.

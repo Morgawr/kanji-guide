@@ -1,16 +1,16 @@
 """Module with an implementation of a kunyomi/kana word node."""
 from graph.node import Node
-from kanji.word import Word
+from kanji.word import WordGroup
 
 
 class KanaNode(Node):
     """Class representing a kana-only word node."""
 
     def unique_id(self) -> str:
-        return ','.join(self.value.get_all_representations())
+        return ','.join(
+            [','.join(word.get_all_representations())
+             for word in self.value.words])
 
-    # TODO(morg): Handle kana nodes with multiple kana words like transitive vs
-    # intransitive pairs being considered a single word group.
-    def __init__(self, value: Word):
+    def __init__(self, value: WordGroup):
         super().__init__()
         self.value = value
