@@ -1,3 +1,4 @@
+"""Module containing utility classes to handle Japanese word representations."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -11,6 +12,7 @@ class _KanjiFragment:
     length: int
 
 class Word:
+    """Represents a Japanese word with possible alternative kanji spellings."""
 
     def __init__(self, word: str):
         self.word: str = word
@@ -21,19 +23,30 @@ class Word:
         # characters are going to be hidden by the kanji parts.
         self.segments: List[List[_KanjiFragment]] = list()
 
-    def AddSegment(self, *fragments: Tuple(str, int, int)) -> None:
+    def add_segment(self, *fragments: Tuple(str, int, int)) -> None:
+        """Adds a new segment to the word segment list.
+
+        Args:
+            fragments: series of fragments composed by a kanji string, an
+                offset, and a length
+        """
         segment = []
         for kanji, offset, length in fragments:
             segment.append(_KanjiFragment(kanji, offset, length))
         self.segments.append(segment)
 
-    def AddAlternative(self, word: str) -> None:
+    def add_alternative(self, word: str) -> None:
+        """Adds an alternative kana representation of the word.
+
+        Args:
+            word: alternative representation of the word
+        """
         self.alternative.append(word)
 
     def __str__(self):
         return self.word
 
-    def _BuildCoveredWord(self, segment: List[_KanjiFragment]) -> str:
+    def _build_covered_word(self, segment: List[_KanjiFragment]) -> str:
         word = ""
         index = 0
         remaining = self.word
@@ -46,15 +59,15 @@ class Word:
             word += remaining
         return word
 
-    def GetAllRepresentations(self) -> List[str]:
+    def get_all_representations(self) -> List[str]:
         """Returns a list of all possible representations of the word."""
         words = [self.word]
         words.extend(self.alternative)
         for segment in self.segments:
-            words.append(self._BuildCoveredWord(segment))
+            words.append(self._build_covered_word(segment))
         return words
 
-    def GetRepresentationsWithKanji(self, kanji: str) -> List[str]:
+    def get_representations_with_kanji(self, kanji: str) -> List[str]:
         """Returns a list of all representations containing the given kanji."""
         words = []
         for segment in self.segments:
@@ -63,10 +76,10 @@ class Word:
                 if kanji in fragment.kanji:
                     found = True
             if found:
-                words.append(self._BuildCoveredWord(segment))
+                words.append(self._build_covered_word(segment))
         return words
 
-    def GetAllKanji(self) -> List[str]:
+    def get_all_kanji(self) -> List[str]:
         """Returns a list of all the kanji used all representations."""
         kanji = []
         for segment in self.segments:
