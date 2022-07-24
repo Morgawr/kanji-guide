@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Tuple, Optional
+from typing import List, Optional, Set, Tuple
 
 
 @dataclass
@@ -93,9 +93,36 @@ class Word:
                 words.append(self._build_covered_word(segment))
         return words
 
-    def get_all_kanji(self) -> List[str]:
-        """Returns a list of all the kanji used all representations."""
+    def get_all_kanji(self) -> Set[str]:
+        """Returns a set of all the kanji used all representations."""
         kanji = []
         for segment in self.segments:
             kanji.extend([x.kanji for x in segment])
-        return kanji
+        return set(kanji)
+
+class WordGroup:
+    """Class representing a 'core' word group.
+
+    A core word group is a collection of Word objects that share a common
+    underlying core meaning regardless of transitivity. For example words like
+    決める and 決まる, 開く and 開ける, etc.
+    """
+
+    # TODO(morg): load from a file
+    def __init__(self):
+        self.words: List[Word] = list()
+
+    def add_word(self, word: Word):
+        """Adds word to the existing list of words.
+
+        Args:
+            word: the word to add
+        """
+        self.words.append(word)
+
+    def get_all_kanji(self) -> Set[str]:
+        """Returns a set of all the kanji used by all Words in the group."""
+        kanji = []
+        for word in self.words:
+            kanji.extend(word.get_all_kanji())
+        return set(kanji)

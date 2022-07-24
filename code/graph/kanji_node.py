@@ -1,4 +1,5 @@
 """Module with an implementation of a kanji node."""
+from corpus.corpus import Corpus
 from graph.node import Node
 
 
